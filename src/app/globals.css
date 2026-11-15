@@ -1,0 +1,350 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/*
+ * Gold.Yh design tokens
+ * Palette sampled from the workshop photographs: warm forge blacks,
+ * the mid-tone of polished braid, champagne highlights and ivory paper.
+ */
+@theme {
+  --color-ink: #100d0a;
+  --color-soot: #191510;
+  --color-ember: #262019;
+  --color-gold: #c99a4e;
+  --color-gold-bright: #e2b96c;
+  --color-champagne: #e6cf9f;
+  --color-ivory: #f1eadc;
+  --color-ash: #958d80;
+  --color-bronze: #775722;
+  --color-umber: #2b241c;
+  --color-stone: #5c5448;
+
+  --font-display: var(--font-bodoni), "Bodoni 72", Didot, "Times New Roman", serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --breakpoint-xs: 30rem;
+}
+
+/* Desktop storytelling layouts only apply when motion is welcome. */
+@custom-variant reel (@media (min-width: 64rem) and (prefers-reduced-motion: no-preference));
+
+@layer base {
+  html {
+    background-color: var(--color-ink);
+    color: var(--color-ivory);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 1.5px solid var(--color-champagne);
+    outline-offset: 4px;
+  }
+
+  .on-light :focus-visible {
+    outline-color: var(--color-bronze);
+  }
+
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* Headlines are split into lines by script; hide them until then to avoid a flash. */
+  .js [data-split] {
+    visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js [data-split] {
+      visibility: visible;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------- Layout ---------- */
+
+@utility shell {
+  width: 100%;
+  max-width: 92rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4.2vw, 4rem);
+}
+
+/* ---------- Type scale (Bodoni Moda display, Instrument Sans text) ---------- */
+
+@utility type-hero {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.1rem, 8.6vw, 9.75rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 96;
+}
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 5.6vw, 5.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  font-variation-settings: "opsz" 96;
+}
+
+@utility type-heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  font-variation-settings: "opsz" 72;
+}
+
+@utility type-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  font-variation-settings: "opsz" 36;
+}
+
+@utility type-lede {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.6vw, 1.625rem);
+  line-height: 1.38;
+  letter-spacing: -0.005em;
+  font-variation-settings: "opsz" 24;
+}
+
+@utility type-body {
+  font-size: 1.0625rem;
+  line-height: 1.62;
+}
+
+@utility type-small {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* Short structural labels: sentence case, a little extra tracking, never caps. */
+@utility type-label {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ---------- Components ---------- */
+
+/* Hairline rule that can be drawn in by script (scaleX 0 -> 1). */
+@utility rule {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.22;
+  transform-origin: left center;
+}
+
+/*
+ * Component classes live in the components layer so Tailwind utilities on the
+ * same element (hidden, px-5, min-h-11...) always win.
+ */
+@layer components {
+
+/* A fine film grain over the whole page, matching the photographs. */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Underlined text link: the line retracts and redraws on hover. */
+.link-line {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding-block: 0.35em;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  transition: background-size 0.6s var(--ease-cinematic);
+}
+
+@media (hover: hover) {
+  .link-line:hover {
+    animation: link-redraw 0.9s var(--ease-cinematic);
+  }
+}
+
+@keyframes link-redraw {
+  0% {
+    background-position: 100% 100%;
+    background-size: 100% 1px;
+  }
+  45% {
+    background-position: 100% 100%;
+    background-size: 0% 1px;
+  }
+  46% {
+    background-position: 0 100%;
+    background-size: 0% 1px;
+  }
+  100% {
+    background-position: 0 100%;
+    background-size: 100% 1px;
+  }
+}
+
+/* Primary button: a solid ingot of champagne gold; a brighter fill rises on hover. */
+.btn-gold {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;
+  padding: 0 1.75rem;
+  overflow: hidden;
+  color: var(--color-ink);
+  background: var(--color-champagne);
+  font-weight: 500;
+  font-size: 0.975rem;
+  letter-spacing: 0.01em;
+  transition: color 0.4s var(--ease-cinematic);
+}
+
+.btn-gold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-gold-bright);
+  transform: translateY(101%);
+  transition: transform 0.6s var(--ease-cinematic);
+}
+
+@media (hover: hover) {
+  .btn-gold:hover::before {
+    transform: translateY(0);
+  }
+}
+
+.btn-ghost {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;
+  padding: 0 1.75rem;
+  border: 1px solid color-mix(in oklab, currentColor 38%, transparent);
+  font-weight: 500;
+  font-size: 0.975rem;
+  letter-spacing: 0.01em;
+  transition:
+    border-color 0.4s var(--ease-cinematic),
+    background-color 0.4s var(--ease-cinematic);
+}
+
+@media (hover: hover) {
+  .btn-ghost:hover {
+    border-color: currentColor;
+    background-color: color-mix(in oklab, currentColor 7%, transparent);
+  }
+}
+
+/* ---------- Intro sequence ---------- */
+
+.intro-curtain {
+  display: none;
+}
+
+.intro-pending .intro-curtain {
+  display: flex;
+}
+
+.intro-pending [data-intro] {
+  opacity: 0;
+}
+
+/* ---------- Hero photograph edge treatment ---------- */
+
+.hero-visual {
+  mask-image: linear-gradient(to bottom, #000 52%, transparent 100%);
+}
+
+@media (min-width: 64rem) {
+  .hero-visual {
+    mask-image: linear-gradient(to right, transparent 0%, #000 26%);
+  }
+}
+
+.braid-canvas {
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask-composite: intersect;
+}
+
+@media (min-width: 64rem) {
+  .braid-canvas {
+    mask-image: linear-gradient(to right, transparent 0%, #000 22%);
+    mask-composite: add;
+  }
+}
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* Masked line wrappers produced by SplitText. */
+.split-line {
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+} /* @layer components */

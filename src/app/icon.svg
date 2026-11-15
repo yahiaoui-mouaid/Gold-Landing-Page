@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#100d0a"/>
+  <path d="M14 8.5H50L55.5 14V50L50 55.5H14L8.5 50V14Z" fill="none" stroke="#c99a4e" stroke-width="2"/>
+  <text x="30" y="44" text-anchor="middle" font-family="Didot, 'Bodoni 72', 'Times New Roman', serif" font-size="34" fill="#f1eadc">G</text>
+  <circle cx="45" cy="42" r="2.6" fill="#c99a4e"/>
+</svg>
